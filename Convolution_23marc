@@ -1,0 +1,47 @@
+void main() 
+{ 
+InitializeSineTable( Table,sizeof(Table) ); 
+GenerateInputPulse( Table, Input, sizeof(Table) ); 
+GenerateImpulseCoeffs( Table, Impulse, sizeof(Impulse) ); 
+CalculateOutputPulse( Input, sizeof(Input), Impulse, 
+ sizeof(Impulse), Output ); 
+exit( 0 ); 
+} 
+void InitializeSineTable( float Table[], size_t nSize ) 
+{ 
+const float RADIANS = 0.017453292; 
+for ( int i=0; i<nSize; i++ ) 
+ { 
+Table[i] = sin ( RADIANS * i ); 
+ } 
+- 1
+
+} 
+void GenerateInputPulse ( const float Table[], float Input[], size_t nSize ) 
+{ 
+for (int i=1; i<=10; i++ ) 
+ { 
+for (int j=0; j<nSize/10; j++ ) 
+ {
+Input [j*i] = Table [((j*i)/i)]; 
+ }
+ } 
+} 
+void GenerateImpulseCoeffs ( const float Table[], float Impulse[], size_t nSize ) 
+{ 
+for ( int i=0; i<nSize; i++ ) 
+ { 
+ Impulse[i] = Table[(i*10)]; 
+ } 
+} 
+void CalculateOutputPulse( const float Input[], size_t nInputSize, 
+ const float Impulse[], size_t nImpulseSize, float Output[] ) 
+{ 
+for( int i=0; i<nInputSize; i++ ) 
+ { 
+for( int j=0; j<nImpulseSize; j++ ) 
+ {
+Output[i+j] = Output[i+j] + (Input[i] * Impulse[j]); 
+ }
+ } 
+}
